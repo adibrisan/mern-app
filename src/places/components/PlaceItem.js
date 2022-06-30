@@ -9,6 +9,12 @@ import "./PlaceItem.css";
 
 const PlaceItem = (props) => {
   const [showMap, setShowMap] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const confirmDeleteHandler = () => {
+    console.log("DELETING...");
+    setShowConfirmModal(false);
+  };
 
   return (
     <>
@@ -23,6 +29,27 @@ const PlaceItem = (props) => {
         <div className="map-container">
           <Map center={Object.values(props.coordinates)} zoom={9} />
         </div>
+      </Modal>
+      <Modal
+        show={showConfirmModal}
+        onCancel={() => setShowConfirmModal(false)}
+        header="Are you sure ?"
+        footerClass="place-item__modal-actions"
+        footer={
+          <>
+            <Button inverse onClick={() => setShowConfirmModal(false)}>
+              Cancel
+            </Button>
+            <Button danger onClick={confirmDeleteHandler}>
+              Delete
+            </Button>
+          </>
+        }
+      >
+        <p>
+          Do you want to proceed and delete this place? Please note that it
+          can't be undone thereafter.
+        </p>
       </Modal>
       <li className="place-item">
         <Card className="place-item__content">
@@ -39,7 +66,9 @@ const PlaceItem = (props) => {
               View on MAP
             </Button>
             <Button to={`/places/${props.id}`}>Edit</Button>
-            <Button danger>Delete</Button>
+            <Button danger onClick={() => setShowConfirmModal(true)}>
+              Delete
+            </Button>
           </div>
         </Card>
       </li>
